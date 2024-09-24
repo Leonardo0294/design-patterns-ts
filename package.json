@@ -1,0 +1,23 @@
+{
+  "name": "design-patterns-ts",
+  "version": "1.0.0",
+  "description": "A project demonstrating various design patterns implemented in TypeScript.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Tu Nombre",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.6.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "mongodb": "^6.9.0"
+  }
+}
