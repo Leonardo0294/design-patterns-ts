@@ -1,34 +1,45 @@
-// src/Adapter/BillingAdapter.ts
+// BillingAdapter.ts
 
-class OldBillingSystem {
-    public createInvoice(details: string): void {
-        console.log(`Invoice created with details: ${details}`);
+// Definición de la interfaz IFacturacion
+export interface IFacturacion {
+    mostrarDetalles(): void;
+  }
+  
+  // Clase FacturacionVieja
+  export class FacturacionVieja {
+    // Propiedades de la clase
+    private nombreCliente: string;
+    private monto: number;
+  
+    constructor(nombreCliente: string, monto: number) {
+      this.nombreCliente = nombreCliente;
+      this.monto = monto;
     }
-
-    public getInvoice(id: number): string {
-        return `Invoice #${id}`;
+  
+    // Método para mostrar detalles
+    public mostrarDetalles() {
+      console.log(`Cliente: ${this.nombreCliente}, Monto: ${this.monto}`);
     }
-}
-
-interface IBillingSystem {
-    generateInvoice(details: string): void;
-    consultInvoice(id: number): string;
-}
-
-class BillingAdapter implements IBillingSystem {
-    private oldSystem: OldBillingSystem;
-
-    constructor(oldSystem: OldBillingSystem) {
-        this.oldSystem = oldSystem;
+  }
+  
+  // Clase AdaptadorFacturacion que implementa IFacturacion
+  export class AdaptadorFacturacion implements IFacturacion {
+    private facturacion: FacturacionVieja;
+  
+    constructor(facturacion: FacturacionVieja) {
+      this.facturacion = facturacion;
     }
-
-    public generateInvoice(details: string): void {
-        this.oldSystem.createInvoice(details);
+  
+    // Implementación del método mostrarDetalles
+    public mostrarDetalles() {
+      this.facturacion.mostrarDetalles();
     }
-
-    public consultInvoice(id: number): string {
-        return this.oldSystem.getInvoice(id);
-    }
-}
-
-export default BillingAdapter;
+  }
+  
+  // Ejemplo de uso
+  const facturacionVieja = new FacturacionVieja("Juan Pérez", 1000);
+  const adaptador = new AdaptadorFacturacion(facturacionVieja);
+  
+  // Llamar al método mostrarDetalles a través del adaptador
+  adaptador.mostrarDetalles();
+  

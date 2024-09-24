@@ -1,33 +1,51 @@
 "use strict";
-// src/Singleton/Configuration.ts
-Object.defineProperty(exports, "__esModule", { value: true });
-class Configuration {
+// Configuracion.ts
+class Configuracion {
+    // Constructor privado para prevenir la instanciación directa
     constructor() {
-        this.language = "en";
-        this.dbPath = "/data/db";
-        this.logLevel = "info";
-        this.mongoHost = "localhost";
-        this.mongoPort = 27017;
-        this.mongoUser = "admin";
-        this.mongoDBName = "inventoryDB";
+        this.idioma = 'es'; // Idioma por defecto
+        this.rutaBaseDatos = '/ruta/a/base/datos'; // Ruta de base de datos por defecto
+        this.nivelRegistro = 'info'; // Nivel de registro por defecto
     }
-    static getInstance() {
-        if (!Configuration.instance) {
-            Configuration.instance = new Configuration();
+    // Método para obtener la instancia del Singleton
+    static obtenerInstancia() {
+        if (!Configuracion.instancia) {
+            Configuracion.instancia = new Configuracion();
         }
-        return Configuration.instance;
+        return Configuracion.instancia;
     }
-    getMongoHost() {
-        return this.mongoHost;
+    // Métodos para obtener y actualizar propiedades
+    obtenerIdioma() {
+        return this.idioma;
     }
-    getMongoPort() {
-        return this.mongoPort;
+    establecerIdioma(idioma) {
+        this.idioma = idioma;
     }
-    getMongoUser() {
-        return this.mongoUser;
+    obtenerRutaBaseDatos() {
+        return this.rutaBaseDatos;
     }
-    getMongoDBName() {
-        return this.mongoDBName;
+    establecerRutaBaseDatos(ruta) {
+        this.rutaBaseDatos = ruta;
+    }
+    obtenerNivelRegistro() {
+        return this.nivelRegistro;
+    }
+    establecerNivelRegistro(nivel) {
+        this.nivelRegistro = nivel;
     }
 }
-exports.default = Configuration;
+// Ejemplo de uso
+const config1 = Configuracion.obtenerInstancia();
+console.log(`Idioma inicial: ${config1.obtenerIdioma()}`);
+console.log(`Ruta de base de datos: ${config1.obtenerRutaBaseDatos()}`);
+console.log(`Nivel de registro: ${config1.obtenerNivelRegistro()}`);
+// Actualizar configuración
+config1.establecerIdioma('en');
+config1.establecerRutaBaseDatos('/new/path/to/database');
+config1.establecerNivelRegistro('debug');
+const config2 = Configuracion.obtenerInstancia();
+console.log(`Idioma actualizado: ${config2.obtenerIdioma()}`);
+console.log(`Ruta de base de datos actualizada: ${config2.obtenerRutaBaseDatos()}`);
+console.log(`Nivel de registro actualizado: ${config2.obtenerNivelRegistro()}`);
+// Comprobar que ambas instancias son la misma
+console.log(config1 === config2); // Debería mostrar true

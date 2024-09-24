@@ -1,49 +1,69 @@
-// src/Singleton/Configuration.ts
-
-class Configuration {
-    private static instance: Configuration;
-    private language: string;
-    private dbPath: string;
-    private logLevel: string;
-    private mongoHost: string;
-    private mongoPort: number;
-    private mongoUser: string;
-    private mongoDBName: string;
-
+// Configuracion.ts
+class Configuracion {
+    private static instancia: Configuracion;
+  
+    // Propiedades de configuración
+    private idioma: string;
+    private rutaBaseDatos: string;
+    private nivelRegistro: string;
+  
+    // Constructor privado para prevenir la instanciación directa
     private constructor() {
-        this.language = "en";
-        this.dbPath = "/data/db";
-        this.logLevel = "info";
-        this.mongoHost = "localhost";
-        this.mongoPort = 27017;
-        this.mongoUser = "admin";
-        this.mongoDBName = "inventoryDB";
+      this.idioma = 'es'; // Idioma por defecto
+      this.rutaBaseDatos = '/ruta/a/base/datos'; // Ruta de base de datos por defecto
+      this.nivelRegistro = 'info'; // Nivel de registro por defecto
     }
-
-    public static getInstance(): Configuration {
-        if (!Configuration.instance) {
-            Configuration.instance = new Configuration();
-        }
-        return Configuration.instance;
+  
+    // Método para obtener la instancia del Singleton
+    public static obtenerInstancia(): Configuracion {
+      if (!Configuracion.instancia) {
+        Configuracion.instancia = new Configuracion();
+      }
+      return Configuracion.instancia;
     }
-
-    public getMongoHost(): string {
-        return this.mongoHost;
+  
+    // Métodos para obtener y actualizar propiedades
+    public obtenerIdioma(): string {
+      return this.idioma;
     }
-
-    public getMongoPort(): number {
-        return this.mongoPort;
+  
+    public establecerIdioma(idioma: string): void {
+      this.idioma = idioma;
     }
-
-    public getMongoUser(): string {
-        return this.mongoUser;
+  
+    public obtenerRutaBaseDatos(): string {
+      return this.rutaBaseDatos;
     }
-
-    public getMongoDBName(): string {
-        return this.mongoDBName;
+  
+    public establecerRutaBaseDatos(ruta: string): void {
+      this.rutaBaseDatos = ruta;
     }
-
-    // Otros métodos...
-}
-
-export default Configuration;
+  
+    public obtenerNivelRegistro(): string {
+      return this.nivelRegistro;
+    }
+  
+    public establecerNivelRegistro(nivel: string): void {
+      this.nivelRegistro = nivel;
+    }
+  }
+  
+  // Ejemplo de uso
+  const config1 = Configuracion.obtenerInstancia();
+  console.log(`Idioma inicial: ${config1.obtenerIdioma()}`);
+  console.log(`Ruta de base de datos: ${config1.obtenerRutaBaseDatos()}`);
+  console.log(`Nivel de registro: ${config1.obtenerNivelRegistro()}`);
+  
+  // Actualizar configuración
+  config1.establecerIdioma('en');
+  config1.establecerRutaBaseDatos('/new/path/to/database');
+  config1.establecerNivelRegistro('debug');
+  
+  const config2 = Configuracion.obtenerInstancia();
+  console.log(`Idioma actualizado: ${config2.obtenerIdioma()}`);
+  console.log(`Ruta de base de datos actualizada: ${config2.obtenerRutaBaseDatos()}`);
+  console.log(`Nivel de registro actualizado: ${config2.obtenerNivelRegistro()}`);
+  
+  // Comprobar que ambas instancias son la misma
+  console.log(config1 === config2); // Debería mostrar true
+  

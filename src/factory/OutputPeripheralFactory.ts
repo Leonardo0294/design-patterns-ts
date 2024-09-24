@@ -1,53 +1,64 @@
-// src/Factory/OutputPeripheralFactory.ts
+// main.ts
 
-abstract class OutputPeripheral {
-    constructor(public brand: string) {}
-    abstract details(): string;
+// Interfaz que define el comportamiento de un periférico de salida
+interface IPerifericoSalida {
+    mostrarInfo(): void;
 }
 
-class Monitor extends OutputPeripheral {
-    constructor(brand: string, public resolution: string) {
-        super(brand);
-    }
+// Clase para el periférico Monitor
+class Monitor implements IPerifericoSalida {
+    constructor(private resolucion: string) {}
 
-    public details(): string {
-        return `Monitor - Brand: ${this.brand}, Resolution: ${this.resolution}`;
-    }
-}
-
-class Printer extends OutputPeripheral {
-    constructor(brand: string, public printType: string) {
-        super(brand);
-    }
-
-    public details(): string {
-        return `Printer - Brand: ${this.brand}, Print Type: ${this.printType}`;
+    mostrarInfo(): void {
+        console.log(`Monitor: Resolución - ${this.resolucion}`);
     }
 }
 
-class Projector extends OutputPeripheral {
-    constructor(brand: string, public lumens: number) {
-        super(brand);
-    }
+// Clase para el periférico Impresora
+class Impresora implements IPerifericoSalida {
+    constructor(private tipoImpresion: string) {}
 
-    public details(): string {
-        return `Projector - Brand: ${this.brand}, Lumens: ${this.lumens}`;
+    mostrarInfo(): void {
+        console.log(`Impresora: Tipo de impresión - ${this.tipoImpresion}`);
     }
 }
 
-class OutputPeripheralFactory {
-    public createPeripheral(type: string, brand: string, spec: string | number): OutputPeripheral {
-        switch (type) {
+// Clase para el periférico Proyector
+class Proyector implements IPerifericoSalida {
+    constructor(private brillo: number) {}
+
+    mostrarInfo(): void {
+        console.log(`Proyector: Brillo - ${this.brillo} lúmenes`);
+    }
+}
+
+// Clase que implementa el método factory para crear periféricos
+class PerifericoSalidaFactory {
+    static crearPeriferico(tipo: string): IPerifericoSalida {
+        switch (tipo) {
             case "Monitor":
-                return new Monitor(brand, spec as string);
-            case "Printer":
-                return new Printer(brand, spec as string);
-            case "Projector":
-                return new Projector(brand, spec as number);
+                return new Monitor("1920x1080"); // Resolución por defecto
+            case "Impresora":
+                return new Impresora("Inyección de tinta"); // Tipo de impresión por defecto
+            case "Proyector":
+                return new Proyector(3000); // Brillo por defecto
             default:
-                throw new Error("Unknown peripheral type");
+                throw new Error("Tipo de periférico no reconocido");
         }
     }
 }
 
-export default OutputPeripheralFactory;
+// Función principal para probar la creación de periféricos
+function main() {
+    const monitor = PerifericoSalidaFactory.crearPeriferico("Monitor");
+    monitor.mostrarInfo();
+
+    const impresora = PerifericoSalidaFactory.crearPeriferico("Impresora");
+    impresora.mostrarInfo();
+
+    const proyector = PerifericoSalidaFactory.crearPeriferico("Proyector");
+    proyector.mostrarInfo();
+}
+
+// Ejecutar la función principal
+main();

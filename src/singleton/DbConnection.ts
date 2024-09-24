@@ -1,49 +1,71 @@
-// src/Singleton/DbConnection.ts
-
-import { MongoClient } from "mongodb";
-
-class DbConnection {
-    private static instance: DbConnection;
-    private client: MongoClient | null = null;
+// ConexionDB.ts
+class ConexionDB {
+    private static instancia: ConexionDB;
+  
+    // Propiedades de la conexión a la base de datos
     private host: string;
-    private port: number;
-    private user: string;
-    private dbName: string;
-
+    private puerto: number;
+    private usuario: string;
+    private conectado: boolean;
+  
+    // Constructor privado para prevenir la instanciación directa
     private constructor() {
-        this.host = "localhost";
-        this.port = 27017; // Puerto por defecto de MongoDB
-        this.user = "admin"; // Cambia esto según tu configuración
-        this.dbName = "inventoryDB"; // Nombre de la base de datos
+      this.host = 'localhost'; // Host por defecto
+      this.puerto = 5432; // Puerto por defecto
+      this.usuario = 'admin'; // Usuario por defecto
+      this.conectado = false; // Estado de conexión
     }
-
-    public static getInstance(): DbConnection {
-        if (!DbConnection.instance) {
-            DbConnection.instance = new DbConnection();
-        }
-        return DbConnection.instance;
+  
+    // Método para obtener la instancia del Singleton
+    public static obtenerInstancia(): ConexionDB {
+      if (!ConexionDB.instancia) {
+        ConexionDB.instancia = new ConexionDB();
+      }
+      return ConexionDB.instancia;
     }
-
-    public async connect(): Promise<void> {
-        if (!this.client) {
-            const uri = `mongodb://${this.user}@${this.host}:${this.port}/${this.dbName}`;
-            this.client = new MongoClient(uri);
-            await this.client.connect();
-            console.log(`Connected to MongoDB at ${this.host}:${this.port}`);
-        }
+  
+    // Método para conectar a la base de datos
+    public conectar(): void {
+      if (!this.conectado) {
+        console.log(`Conectando a la base de datos en ${this.host}:${this.puerto} como ${this.usuario}...`);
+        this.conectado = true;
+        console.log('Conexión establecida.');
+      } else {
+        console.log('Ya está conectado a la base de datos.');
+      }
     }
-
-    public async disconnect(): Promise<void> {
-        if (this.client) {
-            await this.client.close();
-            this.client = null;
-            console.log("MongoDB disconnected");
-        }
+  
+    // Método para desconectar de la base de datos
+    public desconectar(): void {
+      if (this.conectado) {
+        console.log('Desconectando de la base de datos...');
+        this.conectado = false;
+        console.log('Conexión cerrada.');
+      } else {
+        console.log('No hay ninguna conexión activa.');
+      }
     }
-
-    public getClient(): MongoClient | null {
-        return this.client;
+  
+    // Métodos para obtener propiedades de configuración
+    public obtenerHost(): string {
+      return this.host;
     }
-}
-
-export default DbConnection;
+  
+    public obtenerPuerto(): number {
+      return this.puerto;
+    }
+  
+    public obtenerUsuario(): string {
+      return this.usuario;
+    }
+  }
+  
+  // Ejemplo de uso
+  const conexion1 = ConexionDB.obtenerInstancia();
+  conexion1.conectar();
+  
+  const conexion2 = ConexionDB.obtenerInstancia();
+  console.log(`¿Son las mismas instancias? ${conexion1 === conexion2}`); 
+  
+  conexion1.desconectar();
+  

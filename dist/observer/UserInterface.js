@@ -1,31 +1,58 @@
 "use strict";
-// src/Observer/UserInterface.ts
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Inventory = exports.UserInterface = void 0;
-class UserInterface {
-    update(inventoryChange) {
-        console.log(`User Interface updated: ${inventoryChange}`);
+// Clase para la interfaz de usuario que actúa como observador
+class InterfazUsuario {
+    constructor(nombre) {
+        this.nombre = nombre;
+    }
+    // Método para actualizar la visualización del inventario
+    actualizar(inventario) {
+        console.log(`Interfaz ${this.nombre} actualizada. Inventario actual:`);
+        console.log(inventario.obtenerEquipos());
     }
 }
-exports.UserInterface = UserInterface;
-class Inventory {
+// Clase Inventario que permite agregar, eliminar y notificar cambios
+class Inventario {
     constructor() {
-        this.observers = [];
-        this.equipmentList = [];
+        this.equipos = [];
+        this.observadores = [];
     }
-    addObserver(observer) {
-        this.observers.push(observer);
+    // Método para agregar un equipo al inventario
+    agregarEquipo(equipo) {
+        this.equipos.push(equipo);
+        this.notificarObservadores();
     }
-    addEquipment(equipment) {
-        this.equipmentList.push(equipment);
-        this.notifyObservers(`Equipment added: ${equipment}`);
+    // Método para eliminar un equipo del inventario
+    eliminarEquipo(equipo) {
+        const index = this.equipos.indexOf(equipo);
+        if (index > -1) {
+            this.equipos.splice(index, 1);
+            this.notificarObservadores();
+        }
     }
-    removeEquipment(equipment) {
-        this.equipmentList = this.equipmentList.filter(e => e !== equipment);
-        this.notifyObservers(`Equipment removed: ${equipment}`);
+    // Método para obtener la lista de equipos
+    obtenerEquipos() {
+        return this.equipos;
     }
-    notifyObservers(change) {
-        this.observers.forEach(observer => observer.update(change));
+    // Método para agregar un observador
+    agregarObservador(observador) {
+        this.observadores.push(observador);
+    }
+    // Método para notificar a todos los observadores
+    notificarObservadores() {
+        for (const observador of this.observadores) {
+            observador.actualizar(this);
+        }
     }
 }
-exports.Inventory = Inventory;
+// Ejemplo de uso del patrón Observer
+const interfaz1 = new InterfazUsuario("Principal");
+const interfaz2 = new InterfazUsuario("Secundaria");
+const inventario = new Inventario();
+// Agregar observadores al inventario
+inventario.agregarObservador(interfaz1);
+inventario.agregarObservador(interfaz2);
+// Modificar el inventario
+inventario.agregarEquipo("Compresora");
+inventario.agregarEquipo("Generador");
+inventario.eliminarEquipo("Compresora");
+inventario.agregarEquipo("Aire Acondicionado");

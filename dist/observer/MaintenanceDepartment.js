@@ -1,29 +1,52 @@
 "use strict";
-// src/Observer/MaintenanceDepartment.ts
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Equipment = exports.MaintenanceDepartment = void 0;
-class MaintenanceDepartment {
-    update(equipmentName, status) {
-        console.log(`Maintenance notified: ${equipmentName} needs maintenance (Status: ${status}).`);
+// Clase para el departamento de mantenimiento que actúa como observador
+class DepartamentoMantenimiento {
+    constructor(nombre) {
+        this.nombre = nombre;
+    }
+    // Método para notificar al departamento que un equipo necesita mantenimiento
+    notificar(equipo) {
+        console.log(`Notificación al departamento ${this.nombre}: El equipo ${equipo.getNombre()} necesita mantenimiento.`);
     }
 }
-exports.MaintenanceDepartment = MaintenanceDepartment;
-class Equipment {
-    constructor(name, type, status) {
-        this.name = name;
-        this.type = type;
-        this.status = status;
-        this.observers = [];
+// Clase Equipo que permite agregar observadores y notificar
+class Equipo {
+    constructor(nombre, tipo, estado) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.estado = estado;
+        this.observadores = [];
+        this.tiempoUso = 0;
     }
-    addObserver(observer) {
-        this.observers.push(observer);
+    // Método para agregar un observador
+    agregarObservador(observador) {
+        this.observadores.push(observador);
     }
-    changeStatus(newStatus) {
-        this.status = newStatus;
-        this.notifyObservers();
+    // Método para usar el equipo durante un cierto número de horas
+    usarHoras(horas) {
+        this.tiempoUso += horas;
+        console.log(`El equipo ${this.nombre} ha sido usado durante ${horas} horas. Tiempo total de uso: ${this.tiempoUso} horas.`);
+        // Verificar si se debe notificar a los observadores
+        if (this.tiempoUso >= 10) { // Umbral definido para mantenimiento
+            this.notificarObservadores();
+        }
     }
-    notifyObservers() {
-        this.observers.forEach(observer => observer.update(this.name, this.status));
+    // Método para notificar a todos los observadores
+    notificarObservadores() {
+        for (const observador of this.observadores) {
+            observador.notificar(this);
+        }
+    }
+    // Método para obtener el nombre del equipo
+    getNombre() {
+        return this.nombre;
     }
 }
-exports.Equipment = Equipment;
+// Ejemplo de uso del patrón Observer
+const mantenimiento = new DepartamentoMantenimiento("Mantenimiento");
+const equipo1 = new Equipo("Compresora", "Compresor", "Operativo");
+// Agregar el departamento de mantenimiento como observador del equipo
+equipo1.agregarObservador(mantenimiento);
+// Usar el equipo
+equipo1.usarHoras(5); // No debería notificar
+equipo1.usarHoras(6); // Debería notificar, total 11 horas

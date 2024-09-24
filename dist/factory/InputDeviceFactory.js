@@ -1,6 +1,5 @@
 "use strict";
-// src/Factory/InputDeviceFactory.ts
-Object.defineProperty(exports, "__esModule", { value: true });
+// src/factory/InputDeviceFactory.ts
 class InputDevice {
     constructor(brand, connectionType) {
         this.brand = brand;
@@ -12,7 +11,7 @@ class Keyboard extends InputDevice {
         super(brand, connectionType);
     }
     details() {
-        return `Keyboard - Brand: ${this.brand}, Connection: ${this.connectionType}`;
+        return `Teclado - Marca: ${this.brand}, Conexión: ${this.connectionType}`;
     }
 }
 class Mouse extends InputDevice {
@@ -20,7 +19,7 @@ class Mouse extends InputDevice {
         super(brand, connectionType);
     }
     details() {
-        return `Mouse - Brand: ${this.brand}, Connection: ${this.connectionType}`;
+        return `Ratón - Marca: ${this.brand}, Conexión: ${this.connectionType}`;
     }
 }
 class Scanner extends InputDevice {
@@ -28,7 +27,7 @@ class Scanner extends InputDevice {
         super(brand, connectionType);
     }
     details() {
-        return `Scanner - Brand: ${this.brand}, Connection: ${this.connectionType}`;
+        return `Escáner - Marca: ${this.brand}, Conexión: ${this.connectionType}`;
     }
 }
 class InputDeviceFactory {
@@ -41,8 +40,17 @@ class InputDeviceFactory {
             case "Scanner":
                 return new Scanner(brand, connectionType);
             default:
-                throw new Error("Unknown device type");
+                throw new Error("Tipo de dispositivo desconocido");
         }
     }
 }
-exports.default = InputDeviceFactory;
+// Ejemplo para mostrar en consola
+const factory = new InputDeviceFactory();
+// Crear dispositivos
+const teclado = factory.createDevice("Keyboard", "Logitech", "Inalámbrico");
+const raton = factory.createDevice("Mouse", "Razer", "Cableado");
+const escaner = factory.createDevice("Scanner", "HP", "USB");
+// Mostrar detalles en consola
+console.log(teclado.details());
+console.log(raton.details());
+console.log(escaner.details());
